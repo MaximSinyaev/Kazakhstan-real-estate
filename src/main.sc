@@ -27,4 +27,6 @@ theme: /
 
     state: create_filter
         a: Отправь мне ссылку поиска со всеми включенными фильтрами, которую я смогу парсить и отправлять тебе все свежие кварьтры
-        a: {{$request.accountId}} {{$request.userFrom.id}}
+        a: >Account id: {{$request.accountId}}
+            > Channel user id: {{$request.channelUserId}}
+            > User From data: id: {{$request.userFrom.id}} First name: {{$request.userFrom.FirstName}} Last name:  {{$request.userFrom.LastName}}
