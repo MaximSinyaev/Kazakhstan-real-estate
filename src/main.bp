@@ -1,0 +1,28 @@
+{
+  "positions" : [ {
+    "id" : "/Start",
+    "x" : 240,
+    "y" : 273
+  }, {
+    "id" : "/Hello",
+    "x" : 240,
+    "y" : 697
+  }, {
+    "id" : "/Bye",
+    "x" : 240,
+    "y" : 1099
+  }, {
+    "id" : "/NoMatch",
+    "x" : 240,
+    "y" : 1511
+  }, {
+    "id" : "/Match",
+    "x" : 240,
+    "y" : 1823
+  }, {
+    "id" : "/create_filter",
+    "name" : "create_filter",
+    "x" : 839,
+    "y" : 627
+  } ]
+}
