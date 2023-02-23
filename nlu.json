@@ -16,6 +16,17 @@
     "shared" : false
   },
   "intents" : [ {
+    "path" : "//noMatch",
+    "enabled" : true,
+    "shared" : false,
+    "phrases" : [ {
+      "text" : "/noMatch"
+    } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
+    "priority" : 0
+  }, {
     "path" : "/пока",
     "enabled" : true,
     "shared" : false,
