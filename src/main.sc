@@ -44,8 +44,7 @@ theme: /
             timeout = 0
             headers = [{"name":"content-type","value":"application\/json"}]
             vars = []
-        intent:
-            localPatterns
+        intent: * $filterURL *
         event: noMatch || toState = "/create_filter"
 
         state: create_filter
