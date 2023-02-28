@@ -45,8 +45,8 @@ theme: /
             headers = [{"name":"content-type","value":"application\/json"}]
             vars = []
         intent:
-            
-        event: noMatch || toState = "/create_filter", onlyThisState = true
+            localPatterns
+        event: noMatch || toState = "/create_filter"
 
         state: create_filter
             event: noMatch || fromState = "/create_or_update_user"
