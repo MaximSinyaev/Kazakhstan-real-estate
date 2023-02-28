@@ -26,7 +26,7 @@ theme: /
         a: Я не понял. Вы сказали: {{$request.query}}
 
 
-    state: create_or_update_user
+    state: CreateOrUpdateUser
         a: Отправь мне ссылку поиска со всеми включенными фильтрами, которую я смогу парсить и отправлять тебе все свежие кварьтры
         a: >Account id: {{$request.accountId}}
                 > Channel user id: {{$request.channelUserId}}
@@ -41,10 +41,12 @@ theme: /
                 }
             headers = [{"name":"content-type","value":"application\/json"}]
             vars = [{"name":"","value":""}]
+        buttons:
+            "Залупа" -> /createFilter
 
-        state: create_filter
+        state: createFilter
             q: * $filterURL *
-            q: * $filterURL * || fromState = "/create_or_update_user"
+            q: * $filterURL * || fromState = "/CreateOrUpdateUser"
             a: Отлично, мы записали твои предпочтения, я уведомлю тебя сразу как найду подходящие объявления!
             HttpRequest: 
                 url = https://test-kz-real-estate.free.beeceptor.com
@@ -61,12 +63,13 @@ theme: /
                 vars = [{"name":"","value":""}]
 
 
-        state: anything
+        state: Anything
+            q: yes
             q: $regex<yes>
             q: $regex<yes> || fromState = "/create_or_update_user"
             a: Хуль ты не работаешь
         
-        state: wrong_url
+        state: WrongUrl
             event: noMatch
             a: Ты втираешь мне какую-то дичь, это не ссылка поиска с сайта krisha.kz
             buttons:

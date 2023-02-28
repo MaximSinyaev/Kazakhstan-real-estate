@@ -48,35 +48,8 @@
       "refs" : [ ]
     },
     "priority" : 0
-  }, {
-    "path" : "/Новый интент",
-    "enabled" : true,
-    "shared" : false,
-    "classificationRules" : {
-      "refs" : [ ]
-    },
-    "priority" : 0
   } ],
-  "entities" : [ {
-    "entity" : {
-      "name" : "Фильтр_из_поиска",
-      "enabled" : true,
-      "shared" : false,
-      "type" : "annotation",
-      "priority" : 1,
-      "noSpelling" : true,
-      "noMorph" : false,
-      "phoneticSearch" : false,
-      "fuzzySearch" : false,
-      "client" : false,
-      "hidden" : false
-    },
-    "records" : [ {
-      "type" : "pattern",
-      "rule" : [ ],
-      "value" : ""
-    } ]
-  } ],
+  "entities" : [ ],
   "enabledSystemEntities" : [ "duckling.number", "duckling.time", "duckling.duration", "duckling.phone-number", "duckling.email", "duckling.url" ],
   "spellerDictionary" : [ ],
   "systemEntities" : [ {
