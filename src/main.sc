@@ -22,15 +22,18 @@ theme: /
         a: Пока пока
 
     state: NoMatch
-        event: noMatch
+        event!: noMatch
         a: Я не понял. Вы сказали: {{$request.query}}
+        
+    state: HttpError
+        a: Простите наши сервера не работают, можете пока отдохнуть а мы уже во всю работаем над их восстановлением
 
 
     state: CreateOrUpdateUser
         a: Отправь мне ссылку поиска со всеми включенными фильтрами, которую я смогу парсить и отправлять тебе все свежие кварьтры
         a: >Account id: {{$request.accountId}}
-                > Channel user id: {{$request.channelUserId}}
-                > User From data: id: {{$request.userFrom.id}} First name: {{$request.userFrom.FirstName}} Last name:  {{$request.userFrom.LastName}}
+           > Channel user id: {{$request.channelUserId}}
+           > User From data: id: {{$request.userFrom.id}} First name: {{$request.userFrom.FirstName}} Last name:  {{$request.userFrom.LastName}}
         HttpRequest: 
             url = https://test-kz-real-estate.free.beeceptor.com
             method = POST
@@ -41,10 +44,12 @@ theme: /
                 }
             headers = [{"name":"content-type","value":"application\/json"}]
             vars = [{"name":"","value":""}]
+            errorState = /
         buttons:
             "Залупа" -> ./createFilter
 
         state: createFilter
+            q: * (да/давай*/отлично) *
             q: * $filterURL *
             q: * $filterURL * || fromState = "/CreateOrUpdateUser"
             a: Отлично, мы записали твои предпочтения, я уведомлю тебя сразу как найду подходящие объявления!
