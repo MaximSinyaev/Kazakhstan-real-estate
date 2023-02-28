@@ -10,7 +10,7 @@ theme: /
         q!: $regex<start>
         a: Салам Алейкум, я бот Максат и я помогу тебе найти квартиру по твоим настройкам самым первым.
         buttons:
-            "Создать фильтр" -> /create_or_update_user
+            "Создать фильтр" -> /CreateOrUpdateUser
         event: noMatch || toState = "./"
 
     state: Hello
@@ -22,7 +22,7 @@ theme: /
         a: Пока пока
 
     state: NoMatch
-        event!: noMatch
+        event: noMatch
         a: Я не понял. Вы сказали: {{$request.query}}
 
 
@@ -42,7 +42,7 @@ theme: /
             headers = [{"name":"content-type","value":"application\/json"}]
             vars = [{"name":"","value":""}]
         buttons:
-            "Залупа" -> /createFilter
+            "Залупа" -> ./createFilter
 
         state: createFilter
             q: * $filterURL *
