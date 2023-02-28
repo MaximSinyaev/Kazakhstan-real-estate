@@ -8,7 +8,7 @@ theme: /
     state: Start
         q!: $regex</start>
         q!: $regex<start>
-        a: Салам Алейкум, @я бот Максат и я помогу тебе найти квартиру по твоим настройкам самым первым.
+        a: Салам Алейкум, я бот Максат и я помогу тебе найти квартиру по твоим настройкам самым первым.
         buttons:
             "Создать фильтр" -> /create_or_update_user
         event: noMatch || toState = "./"
@@ -22,12 +22,9 @@ theme: /
         a: Пока пока
 
     state: NoMatch
-        event!: noMatch
+        event: noMatch
         a: Я не понял. Вы сказали: {{$request.query}}
 
-    state: Match
-        event!: match
-        a: {{$context.intent.answer}}
 
     state: create_or_update_user
         a: Отправь мне ссылку поиска со всеми включенными фильтрами, которую я смогу парсить и отправлять тебе все свежие кварьтры
@@ -35,14 +32,13 @@ theme: /
             > Channel user id: {{$request.channelUserId}}
             > User From data: id: {{$request.userFrom.id}} First name: {{$request.userFrom.FirstName}} Last name:  {{$request.userFrom.LastName}}
         HttpRequest: 
-            url = http://51.250.18.104:8088/add_user
+            url = https://test-kz-real-estate.free.beeceptor.com
             method = POST
             dataType = application/json
             body = {
                 "account_id": "{{$request.accountId}}",
                 "user_chat_id": "{{$request.userFrom.id}}"
                 }
-            timeout = 0
             headers = [{"name":"content-type","value":"application\/json"}]
             vars = []
 
@@ -63,6 +59,10 @@ theme: /
                 timeout = 0
                 headers = [{"name":"","value":""}]
                 vars = [{"name":"","value":""}]
+        
+        state: anything
+            q: * (yes/you can) *
+            a: Хуль ты не работаешь
         
         state: wrong_url
             event: noMatch
