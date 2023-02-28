@@ -22,7 +22,7 @@ theme: /
         a: Пока пока
 
     state: NoMatch
-        event: noMatch
+        event!: noMatch
         a: Я не понял. Вы сказали: {{$request.query}}
 
 
@@ -40,9 +40,9 @@ theme: /
                 "user_chat_id": "{{$request.userFrom.id}}"
                 }
             headers = [{"name":"content-type","value":"application\/json"}]
-            vars = []
 
         state: create_filter
+            q: * $filterURL *
             q: * $filterURL * || fromState = "/create_or_update_user"
             a: Отлично, мы записали твои предпочтения, я уведомлю тебя сразу как найду подходящие объявления!
             HttpRequest: 
@@ -56,10 +56,9 @@ theme: /
                     "last_name": {{$request.userFrom.LastName}},
                     "filters_url": {{$request.rawRequest}}
                     }
+                headers = [{"name":"content-type","value":"application\/json"}]
                 timeout = 0
-                headers = [{"name":"","value":""}]
-                vars = [{"name":"","value":""}]
-        
+
         state: anything
             q: * (yes/you can) *
             a: Хуль ты не работаешь

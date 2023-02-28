@@ -34,5 +34,17 @@
     "name" : "create_filter",
     "x" : 1322,
     "y" : 1323
+  }, {
+    "id" : "/create_or_update_user/create_filter",
+    "x" : 620,
+    "y" : 959
+  }, {
+    "id" : "/create_or_update_user/anything",
+    "x" : 240,
+    "y" : 251
+  }, {
+    "id" : "/create_or_update_user/wrong_url",
+    "x" : 642,
+    "y" : 429
   } ]
 }
