@@ -29,8 +29,8 @@ theme: /
     state: create_or_update_user
         a: Отправь мне ссылку поиска со всеми включенными фильтрами, которую я смогу парсить и отправлять тебе все свежие кварьтры
         a: >Account id: {{$request.accountId}}
-            > Channel user id: {{$request.channelUserId}}
-            > User From data: id: {{$request.userFrom.id}} First name: {{$request.userFrom.FirstName}} Last name:  {{$request.userFrom.LastName}}
+                > Channel user id: {{$request.channelUserId}}
+                > User From data: id: {{$request.userFrom.id}} First name: {{$request.userFrom.FirstName}} Last name:  {{$request.userFrom.LastName}}
         HttpRequest: 
             url = https://test-kz-real-estate.free.beeceptor.com
             method = POST
@@ -40,6 +40,7 @@ theme: /
                 "user_chat_id": "{{$request.userFrom.id}}"
                 }
             headers = [{"name":"content-type","value":"application\/json"}]
+            vars = [{"name":"","value":""}]
 
         state: create_filter
             q: * $filterURL *
@@ -57,10 +58,12 @@ theme: /
                     "filters_url": {{$request.rawRequest}}
                     }
                 headers = [{"name":"content-type","value":"application\/json"}]
-                timeout = 0
+                vars = [{"name":"","value":""}]
+
 
         state: anything
-            q: * (yes/you can) *
+            q: * (yes/yeah) *
+            q: * (yes/yeah) * || fromState = "/create_or_update_user"
             a: Хуль ты не работаешь
         
         state: wrong_url
@@ -68,5 +71,5 @@ theme: /
             a: Ты втираешь мне какую-то дичь, это не ссылка поиска с сайта krisha.kz
             buttons:
                 "Попробовать еще раз" -> /create_or_update_user
-                "В начало" -> /StatePath
+                "В начало" -> /Start
             
