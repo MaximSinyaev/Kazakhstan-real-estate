@@ -7,6 +7,7 @@ theme: /
 
     state: Start
         q!: $regex</start>
+        q!: $regex<start>
         a: Салам Алейкум, @я бот Максат и я помогу тебе найти квартиру по твоим настройкам самым первым.
         buttons:
             "Создать фильтр" -> /create_or_update_user
@@ -44,11 +45,9 @@ theme: /
             timeout = 0
             headers = [{"name":"content-type","value":"application\/json"}]
             vars = []
-        intent: * $filterURL *
-        event: noMatch || toState = "/create_filter"
 
         state: create_filter
-            event: noMatch || fromState = "/create_or_update_user"
+            q: * $filterURL * || fromState = "/create_or_update_user"
             a: Отлично, мы записали твои предпочтения, я уведомлю тебя сразу как найду подходящие объявления!
             HttpRequest: 
                 url = https://test-kz-real-estate.free.beeceptor.com
@@ -64,3 +63,11 @@ theme: /
                 timeout = 0
                 headers = [{"name":"","value":""}]
                 vars = [{"name":"","value":""}]
+        
+        state: wrong_url
+            event: noMatch
+            a: Ты втираешь мне какую-то дичь, это не ссылка поиска с сайта krisha.kz
+            buttons:
+                "Попробовать еще раз" -> /create_or_update_user
+                "В начало" -> /StatePath
+            
