@@ -49,7 +49,7 @@ theme: /
             HttpRequest: 
                 url = https://test-kz-real-estate.free.beeceptor.com
                 method = POST
-                dataType = 
+                dataType = application/json
                 body = {
                     "account_id": {{$request.accountId}},
                     "user_chat_id": {{$request.userFrom.id}},
@@ -62,8 +62,8 @@ theme: /
 
 
         state: anything
-            q: * (yes/yeah) *
-            q: * (yes/yeah) * || fromState = "/create_or_update_user"
+            q: $regex<yes>
+            q: $regex<yes> || fromState = "/create_or_update_user"
             a: Хуль ты не работаешь
         
         state: wrong_url
