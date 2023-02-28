@@ -21,7 +21,7 @@ theme: /
         intent!: /пока
         a: Пока пока
 
-    state: NoMatch
+    state: NoMatch || noContext = true
         event!: noMatch
         a: Я не понял. Вы сказали: {{$request.query}}
         
@@ -44,7 +44,9 @@ theme: /
                 }
             headers = [{"name":"content-type","value":"application\/json"}]
             vars = [{"name":"","value":""}]
-            errorState = /
+            errorState = /HttpError
+            #okState = /HttpError
+        event: noMatch || toState = "Anything"
         buttons:
             "Залупа" -> ./createFilter
 
