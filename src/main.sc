@@ -66,13 +66,13 @@ theme: /
         state: Anything
             q: yes
             q: $regex<yes>
-            q: $regex<yes> || fromState = "/create_or_update_user"
+            q: $regex<yes> || fromState = "/CreateOrUpdateUser"
             a: Хуль ты не работаешь
         
         state: WrongUrl
             event: noMatch
             a: Ты втираешь мне какую-то дичь, это не ссылка поиска с сайта krisha.kz
             buttons:
-                "Попробовать еще раз" -> /create_or_update_user
+                "Попробовать еще раз" -> /CreateOrUpdateUser
                 "В начало" -> /Start
             
