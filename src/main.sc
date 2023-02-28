@@ -1,5 +1,8 @@
 require: slotfilling/slotFilling.sc
   module = sys.zb-common
+  
+require: localPatterns 
+
 theme: /
 
     state: Start
@@ -33,7 +36,7 @@ theme: /
         HttpRequest: 
             url = http://51.250.18.104:8088/add_user
             method = POST
-            dataType = 
+            dataType = application/json
             body = {
                 "account_id": "{{$request.accountId}}",
                 "user_chat_id": "{{$request.userFrom.id}}"
@@ -41,22 +44,24 @@ theme: /
             timeout = 0
             headers = [{"name":"content-type","value":"application\/json"}]
             vars = []
-        event: noMatch || toState = "/create_filter", onlyThisState = false
+        intent:
+            
+        event: noMatch || toState = "/create_filter", onlyThisState = true
 
-    state: create_filter
-        event: noMatch || fromState = "/create_or_update_user"
-        a: Отлично, мы записали твои предпочтения, я уведомлю тебя сразу как найду подходящие объявления!
-        HttpRequest: 
-            url = https://test-kz-real-estate.free.beeceptor.com
-            method = POST
-            dataType = 
-            body = {
-                "account_id": {{$request.accountId}},
-                "user_chat_id": {{$request.userFrom.id}},
-                "first_name": {{$request.userFrom.FirstName}},
-                "last_name": {{$request.userFrom.LastName}},
-                "filters_url": {{$request.rawRequest}}
-                }
-            timeout = 0
-            headers = [{"name":"","value":""}]
-            vars = [{"name":"","value":""}]
+        state: create_filter
+            event: noMatch || fromState = "/create_or_update_user"
+            a: Отлично, мы записали твои предпочтения, я уведомлю тебя сразу как найду подходящие объявления!
+            HttpRequest: 
+                url = https://test-kz-real-estate.free.beeceptor.com
+                method = POST
+                dataType = 
+                body = {
+                    "account_id": {{$request.accountId}},
+                    "user_chat_id": {{$request.userFrom.id}},
+                    "first_name": {{$request.userFrom.FirstName}},
+                    "last_name": {{$request.userFrom.LastName}},
+                    "filters_url": {{$request.rawRequest}}
+                    }
+                timeout = 0
+                headers = [{"name":"","value":""}]
+                vars = [{"name":"","value":""}]
