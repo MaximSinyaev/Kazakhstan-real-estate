@@ -119,21 +119,17 @@ theme: /
             a: Отлично, мы записали твои предпочтения, я уведомлю тебя сразу как найду подходящие объявления!
             script:
                 $session.requesURL = $session.url + $session.addFilterEndpoint;
-                log("Add filter url:" $session.requesURL)
+                log("Add filter url:" + $session.requesURL)
             HttpRequest: 
-                url = $env.CRUD_URL
+                url = {{$session.requesURL}}
                 method = POST
-                # dataType = application/json
-                # headers = [{"name":"content-type","value":"application\/json"}]
-                body = {
-                    "account_id": {{$request.accountId}},
-                    "user_chat_id": {{$request.userFrom.id}},
-                    "first_name": {{$request.userFrom.FirstName}},
-                    "last_name": {{$request.userFrom.LastName}},
-                    "filters_url": {{$request.rawRequest}}
-                }
                 errorState = /HttpError
                 okState = ./PlaceHolder
+                body = {
+                    "user_chat_id": "{{$request.userFrom.id}}", 
+                    "filters_url": "{{$request.query}}"
+                    }
+                
             
     state: CatchAll || noContext = true
         event: noMatch
