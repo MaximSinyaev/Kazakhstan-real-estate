@@ -124,11 +124,14 @@ theme: /
                 url = {{$session.requesURL}}
                 method = POST
                 errorState = /HttpError
-                okState = ./PlaceHolder
+                okState = /PlaceHolder
                 body = {
                     "user_chat_id": "{{$request.userFrom.id}}", 
                     "filters_url": "{{$request.query}}"
                     }
+            
+            state: SuccefulCreation
+                a: Мы создали фильтр для тебя, жди уведомлений
                 
             
     state: CatchAll || noContext = true
