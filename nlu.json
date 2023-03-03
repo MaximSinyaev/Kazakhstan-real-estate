@@ -43,10 +43,17 @@
     "shared" : false,
     "phrases" : [ {
       "text" : "привет"
+    }, {
+      "text" : "Салам"
+    }, {
+      "text" : "Салам алейкум"
+    }, {
+      "text" : "Здравствуй"
     } ],
     "classificationRules" : {
       "refs" : [ ]
     },
+    "patterns" : [ ],
     "priority" : 0
   } ],
   "entities" : [ ],
