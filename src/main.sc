@@ -65,17 +65,17 @@ theme: /
         script:
             log("Filter exists: " + $session.filterExists)
         if: $session.filterExists
-            go!: ./CahngeFilter
+            go!: ./ChangeFilter
         else:
             go!: ./CreateFilter
         
-        state: CahngeFilter
-        a: У тебя уже есть активный фильтр, ты можешь его поменять или 
-            отписаться, выбери действие
-        buttons:
-            "Создать новый" -> /CreateOrUpdateFilter
-            "Отписаться" -> /DeleteFilter
-            "На главную" -> /Start
+        state: ChangeFilter
+            a: У тебя уже есть активный фильтр, ты можешь его поменять или 
+                отписаться, выбери действие
+            buttons:
+                "Создать новый" -> /CreateOrUpdateFilter
+                "Отписаться" -> /DeleteFilter
+                "На главную" -> /Start
     
         state: CreateFilter
             a: Как я вижу у тебя еще нет активного фильтра, хочешь создать новый?
@@ -91,7 +91,8 @@ theme: /
     state: HttpError
         a: Простите наши сервера не работают, можете пока отдохнуть а мы уже во 
             всю работаем над их восстановлением. Попробуйте позже.
-        go: /
+        buttons:
+            "Попробовать еще раз" -> /Start
 
     state: DeleteFilter
         a: NotImplemented TBD
@@ -131,7 +132,10 @@ theme: /
                     }
             
             state: SuccefulCreation
-                a: Мы создали фильтр для тебя, жди уведомлений
+                a: Мы создали фильтр для тебя, жди уведомлений! 
+                    Спасибо что пользуешься нашим сервисом!
+                buttons:
+                    "Создать новый фильтр" -> /CreateOrUpdateFilter
                 
             
     state: CatchAll || noContext = true
