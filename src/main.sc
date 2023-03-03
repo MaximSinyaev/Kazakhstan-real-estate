@@ -11,6 +11,9 @@ theme: /
     state: Start
         q!: $regex</start>
         q!: $regex<start>
+        script:
+            $session.url = "https://beeceptor.com/console/test-kz-real-estate"
+            $session.checkUserEndpoint = "/check-user"
         a: Салам Алейкум, я бот Максат и я помогу тебе найти квартиру по твоим настройкам самым первым.
         
         buttons:
@@ -18,14 +21,24 @@ theme: /
     
     state: CheckUser
         q: CheckUser
-        a: {{$env}}
         script:
-            log(toPrettyString($env))
-            log($env.CRUD_URL + "?name1=" + $request.userFrom.id)
+            $session.requesURL = $session.url + $session.checkUserEndpoint + "?" + "userid=" + $request.userFrom.id
+            log($session.requesURL)
         HttpRequest: 
-            url = $env.CRUD_URL?name1=value1&name2=value2
+            url = {{$session.requesURL}}
             method = GET
             errorState = /HttpError
+            vars = []
+            #     { 
+            #         "name": "userExists",
+            #         "value": "$httpResponse.user_exists"
+            #     },
+            #     { 
+            #         "name": "filterExists",
+            #         "value": "$httpResponse.filter_exists"
+            #     }
+                
+            # ]
             okState = /CreateOrUpdateUser
 
         
