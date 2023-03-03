@@ -12,72 +12,80 @@ theme: /
         q!: $regex</start>
         q!: $regex<start>
         script:
-            $session.url = "https://beeceptor.com/console/test-kz-real-estate"
-            $session.checkUserEndpoint = "/check-user"
+            $jsapi.startSession();
+            # $session.url = "https://test-kz-real-estate.free.beeceptor.com";
+            # $session.url = "http://demo1759473.mockable.io/";
+            $session.url = "http://84.201.152.243:8088";
+            $session.checkUserEndpoint = "/filters/is-exist";
+            $session.addFilterEndpoint = "/filters/add";
+            $session.addUserEndpoint = "/users/add";
         a: Салам Алейкум, я бот Максат и я помогу тебе найти квартиру по твоим настройкам самым первым.
-        
-        buttons:
-            "Создать фильтр" -> /CreateOrUpdateUser
+        go!: /CheckUser
     
     state: CheckUser
         q: CheckUser
         script:
-            $session.requesURL = $session.url + $session.checkUserEndpoint + "?" + "userid=" + $request.userFrom.id
-            log($session.requesURL)
+            $session.requesURL = $session.url + $session.checkUserEndpoint + "?user_chat_id=" + $request.userFrom.id;
+            log($session.requesURL);
         HttpRequest: 
             url = {{$session.requesURL}}
             method = GET
+            vars =[{"name": "userExists", "value": "$httpResponse.user_exists"}, {"name": "filterExists", "value": "$httpResponse.filter_exists"}]
             errorState = /HttpError
-            vars = []
-            #     { 
-            #         "name": "userExists",
-            #         "value": "$httpResponse.user_exists"
-            #     },
-            #     { 
-            #         "name": "filterExists",
-            #         "value": "$httpResponse.filter_exists"
-            #     }
+            okState = ./UserExistanceHandler
+        
+        state: UserExistanceHandler
+            script:
+                log("User exists: " + $session.userExists)
+            if: $session.userExists
+                go!: /FiltersMenu
+            else:
+                go!: /CreateUser
                 
-            # ]
-            okState = /CreateOrUpdateUser
-
+        state: FilterExistanceHandler
+            script:
+                log("Filter exists: " + $session.filterExists)
+            if: $session.filterExists
+                go: /CahngeFilter
+            else:
+                go: /CreateUser
         
     state: CreateUser
+        script:
+            $session.requesURL = $session.url + $session.addUserEndpoint;
+            log("User url: " + $session.requesURL)
         HttpRequest: 
-            url = $env.CRUD_URL
+            url = {{$session.requesURL}}
             method = POST
-            dataType = application/json
-            headers = [{"name":"content-type","value":"application\/json"}]
+            body = {"account_id": "{{$request.accountId}}", "user_chat_id": "{{$request.userFrom.id}}"}
             errorState = /HttpError
-            okState = ./PlaceHolder
-            body = {
-                "account_id": "{{$request.accountId}}",
-                "user_chat_id": "{{$request.userFrom.id}}"
-                }
+            okState = /FiltersMenu
+            
+    state: FiltersMenu
+        script:
+            log("Filter exists: " + $session.filterExists)
+        if: $session.filterExists
+            go!: ./CahngeFilter
+        else:
+            go!: ./CreateFilter
+        
+        state: CahngeFilter
+        a: У тебя уже есть активный фильтр, ты можешь его поменять или 
+            отписаться, выбери действие
+        buttons:
+            "Создать новый" -> /CreateOrUpdateFilter
+            "Отписаться" -> /DeleteFilter
+            "На главную" -> /Start
     
-    state: CheckFilter
-        
-        
-        
+        state: CreateFilter
+            a: Как я вижу у тебя еще нет активного фильтра, хочешь создать новый?
+            buttons:
+                "Создать фильтр" -> /CreateOrUpdateFilter
+                "На главную" -> /Start
         
     state: Reset
-        q!: reset
-        q!: Отмена
         q!: $regex</?reset>
         go!: /Start
-
-    state: Hello
-        intent!: /привет
-        a: Привет привет
-        
-
-    state: Bye
-        intent!: /пока
-        a: Пока пока
-
-    state: CatchAll || noContext = true
-        event: noMatch
-        a: Я не понял. Вы сказали: {{$request.query}}
         
         
     state: HttpError
@@ -85,62 +93,48 @@ theme: /
             всю работаем над их восстановлением. Попробуйте позже.
         go: /
 
+    state: DeleteFilter
+        a: NotImplemented TBD
 
-    state: CreateOrUpdateUser
+    state: CreateOrUpdateFilter
         a: Отправь мне ссылку поиска со всеми включенными фильтрами, которую я смогу парсить и отправлять тебе все свежие кварьтры
         a: >Account id: {{$request.accountId}}
            > Channel user id: {{$request.channelUserId}}
            > User From data: id: {{$request.userFrom.id}} First name: {{$request.userFrom.FirstName}} Last name:  {{$request.userFrom.LastName}}
-        buttons:
-            "На главную" -> ./CreateFilter
+        # buttons:
+        #     "На главную" -> ./CreateFilter
             
-        state: PlaceHolder
         
-            state: WrongUrl
-                event: noMatch
-                event: noMatch || fromState = "/CreateOrUpdateUser/PlaceHolder"
-                a: Ты втираешь мне какую-то дичь, это не ссылка поиска с сайта krisha.kz
-                buttons:
-                    "Попробовать еще раз" -> /CreateOrUpdateUser
-                    "В начало" -> /Start
-    
-            state: CreateFilter
-                q: * $filterURL *
-                q: * $filterURL * || fromState = "/CreateOrUpdateUser", onlyThisState = true
-                a: Отлично, мы записали твои предпочтения, я уведомлю тебя сразу как найду подходящие объявления!
-                # HttpRequest: 
-                #     url = $env.CRUD_URL
-                #     method = POST
-                #     dataType = application/json
-                #     headers = [{"name":"content-type","value":"application\/json"}]
-                #     body = {
-                #         "account_id": {{$request.accountId}},
-                #         "user_chat_id": {{$request.userFrom.id}},
-                #         "first_name": {{$request.userFrom.FirstName}},
-                #         "last_name": {{$request.userFrom.LastName}},
-                #         "filters_url": {{$request.rawRequest}}
-                #     }
-                    # errorState = /HttpError
-                    # okState = ./PlaceHolder
-        
-    
+        state: WrongUrl
+            event: noMatch
+            event: noMatch || fromState = "/CreateOrUpdateUser/PlaceHolder"
+            a: Ты втираешь мне какую-то дичь, это не ссылка поиска с сайта krisha.kz
+            buttons:
+                "Попробовать еще раз" -> /CreateOrUpdateUser
+                "В начало" -> /Start
+
+        state: CreateFilter
+            q: * $filterURL *
+            q: * $filterURL * || fromState = "/CreateOrUpdateUser", onlyThisState = true
+            a: Отлично, мы записали твои предпочтения, я уведомлю тебя сразу как найду подходящие объявления!
+            script:
+                $session.requesURL = $session.url + $session.addFilterEndpoint;
+                log("Add filter url:" $session.requesURL)
+            HttpRequest: 
+                url = $env.CRUD_URL
+                method = POST
+                # dataType = application/json
+                # headers = [{"name":"content-type","value":"application\/json"}]
+                body = {
+                    "account_id": {{$request.accountId}},
+                    "user_chat_id": {{$request.userFrom.id}},
+                    "first_name": {{$request.userFrom.FirstName}},
+                    "last_name": {{$request.userFrom.LastName}},
+                    "filters_url": {{$request.rawRequest}}
+                }
+                errorState = /HttpError
+                okState = ./PlaceHolder
             
-    state: MorningExercise
-        q!: exercise
-        a: Do you do morning exercise?
-
-        state: EveryDay
-            q: * (yes/ Yeap) *
-            a: Do you do it every day?
-
-            state: Yes
-                q: * (yes/ Yeap) *
-                a: Good!
-
-            state: No
-                q: * (No/no) *
-                a: Morning exercise should become your habit!
-
-        state: No
-            q: * (No/no) *
-            a: Morning exercise helps your body and brain, try working on yourself!
+    state: CatchAll || noContext = true
+        event: noMatch
+        a: Я не понял. Вы сказали: {{$request.query}}
