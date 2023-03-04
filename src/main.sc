@@ -99,25 +99,24 @@ theme: /
 
     state: CreateOrUpdateFilter
         a: Отправь мне ссылку поиска со всеми включенными фильтрами, которую я смогу парсить и отправлять тебе все свежие кварьтры
-        a: >Account id: {{$request.accountId}}
-           > Channel user id: {{$request.channelUserId}}
-           > User From data: id: {{$request.userFrom.id}} First name: {{$request.userFrom.FirstName}} Last name:  {{$request.userFrom.LastName}}
-        # buttons:
-        #     "На главную" -> ./CreateFilter
+        # a: >Account id: {{$request.accountId}}
+        #   > Channel user id: {{$request.channelUserId}}
+        #   > User From data: id: {{$request.userFrom.id}} First name: {{$request.userFrom.FirstName}} Last name:  {{$request.userFrom.LastName}}
+
             
         
         state: WrongUrl
             event: noMatch
-            event: noMatch || fromState = "/CreateOrUpdateUser/PlaceHolder"
+            event: noMatch || fromState = "/CreateOrUpdateFilter"
             a: Ты втираешь мне какую-то дичь, это не ссылка поиска с сайта krisha.kz
             buttons:
-                "Попробовать еще раз" -> /CreateOrUpdateUser
+                "Попробовать еще раз" -> /CreateOrUpdateFilter
                 "В начало" -> /Start
 
         state: CreateFilter
             q: * $filterURL *
             q: * $filterURL * || fromState = "/CreateOrUpdateUser", onlyThisState = true
-            a: Отлично, мы записали твои предпочтения, я уведомлю тебя сразу как найду подходящие объявления!
+            
             script:
                 $session.requesURL = $session.url + $session.addFilterEndpoint;
                 log("Add filter url:" + $session.requesURL)
@@ -125,15 +124,16 @@ theme: /
                 url = {{$session.requesURL}}
                 method = POST
                 errorState = /HttpError
-                okState = /PlaceHolder
+                okState = ./SuccefulCreation
                 body = {
                     "user_chat_id": "{{$request.userFrom.id}}", 
                     "filters_url": "{{$request.query}}"
                     }
             
             state: SuccefulCreation
-                a: Мы создали фильтр для тебя, жди уведомлений! 
-                    Спасибо что пользуешься нашим сервисом!
+                a: Отлично, мы записали твои предпочтения, я уведомлю тебя сразу как найду подходящие объявления!
+                # a: Мы создали фильтр для тебя, жди уведомлений! 
+                #     Спасибо что пользуешься нашим сервисом!
                 buttons:
                     "Создать новый фильтр" -> /CreateOrUpdateFilter
                 

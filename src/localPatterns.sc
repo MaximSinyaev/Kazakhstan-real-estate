@@ -1,3 +1,3 @@
 
 patterns:
-    $filterURL = $regex<(?:https?:\/\/)?(?:www\.)?krisha.kz{1,6}\b([-\[\]a-zA-Z0-9()@:%_\+.~#?&//=]*)>
+    $filterURL = $regex<(?:https?:\/\/)?(?:www\.)?(?:m\.)?krisha.kz{1,6}\b([-\[\]a-zA-Z0-9()@:%_\+.~#?&//=]*)>
